@@ -1,0 +1,42 @@
+{
+  "entities": {
+    "Tab": {
+      "title": "Guitar Tab",
+      "description": "Metadata for a guitar or drum tab PDF",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "artist": { "type": "string" },
+        "language": { "type": "string", "enum": ["Chinese", "English"] },
+        "style": { "type": "string", "enum": ["Pop", "Rock", "Reggae"] },
+        "type": { "type": "string", "enum": ["Guitar", "Drum"] },
+        "pdfUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "userId": { "type": "string" }
+      },
+      "required": ["title", "artist", "language", "style", "pdfUrl"]
+    },
+    "Favorite": {
+      "title": "User Favorite",
+      "description": "A mapping of users to their favorite tabs",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "tabId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "tabId"]
+    }
+  },
+  "firestore": {
+    "/tabs/{tabId}": {
+      "schema": "Tab",
+      "description": "Individual guitar tabs metadata"
+    },
+    "/favorites/{favoriteId}": {
+      "schema": "Favorite",
+      "description": "User favorite tabs mapping"
+    }
+  }
+}

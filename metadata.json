@@ -1,0 +1,6 @@
+{
+  "name": "TabFlow",
+  "description": "A high-performance guitar tab explorer with auto-scroll, built-in rhythm pulse, and category-based organization.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

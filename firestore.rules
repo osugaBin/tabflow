@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidTab(data) {
+      return data.size() >= 5 &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.artist is string && data.artist.size() > 0 && data.artist.size() < 200 &&
+             data.pdfUrl is string && data.pdfUrl.size() > 0 && data.pdfUrl.size() < 1000 &&
+             data.language in ['Chinese', 'English'] &&
+             data.style in ['Pop', 'Rock', 'Reggae'];
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Tabs collection
+    match /tabs/{tabId} {
+      allow read: if true; // Public access to tabs
+      allow create: if isSignedIn() && isValidTab(request.resource.data);
+      allow update, delete: if isOwner(resource.data.userId) && (request.method == 'DELETE' || isValidTab(request.resource.data));
+    }
+
+    // Favorites collection
+    match /favorites/{favoriteId} {
+      allow read, write: if isOwner(resource.data.userId || request.resource.data.userId);
+    }
+  }
+}
