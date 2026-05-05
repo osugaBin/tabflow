@@ -13,7 +13,9 @@ import {
   Github,
   Trash2,
   Wifi,
-  WifiOff
+  WifiOff,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { RhythmController } from '@/src/components/RhythmController';
 import { TabViewer } from '@/src/components/TabViewer';
@@ -208,6 +210,10 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab | null>(null);
   const [favorites, setFavorites] = useState<string[]>(JSON.parse(localStorage.getItem('favs') || '[]'));
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('theme');
+    return (saved as 'dark' | 'light') || 'dark';
+  });
 
   // New Tab Form State
   const [newTab, setNewTab] = useState<Partial<Tab>>({
@@ -216,6 +222,16 @@ export default function App() {
     type: 'Guitar'
   });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  // Theme effect
+  useEffect(() => {
+    document.body.classList.toggle('light', theme === 'light');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -323,9 +339,9 @@ export default function App() {
         <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <div className="bg-gradient-to-br from-primary to-orange-600 p-2 rounded-xl shadow-lg shadow-primary/20">
-              <Music2 className="w-5 h-5 text-white" />
+              <Music2 className="w-5 h-5 text-primary-foreground" />
             </div>
-            <h1 className="font-black text-xl tracking-tighter bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent hidden md:block">
+            <h1 className="font-black text-xl tracking-tighter bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent hidden md:block">
               STRUM.ARCHIVE
             </h1>
             <div className={`ml-2 px-2 py-0.5 rounded-full flex items-center gap-1.5 ${isOnline ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
@@ -347,6 +363,21 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Theme Toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-xl"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5 text-amber-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-slate-600" />
+              )}
+            </Button>
+
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger render={<Button size="sm" className="rounded-xl gap-2 font-bold bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95" />}>
                 <Plus className="w-4 h-4" />
@@ -476,7 +507,7 @@ export default function App() {
         <main className="flex-1 p-4 md:p-8 flex flex-col gap-6 max-w-full overflow-hidden">
           <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-4">
             <div>
-              <h2 className="text-3xl font-black tracking-tighter text-white">Your Archive</h2>
+              <h2 className="text-3xl font-black tracking-tighter text-foreground">Your Archive</h2>
               <p className="text-muted-foreground font-mono text-[10px] uppercase tracking-[0.3em] mt-2 opacity-60 flex items-center gap-2">
                 <span className="w-1 h-1 bg-primary rounded-full" />
                 {filteredTabs.length} Tracks indexed / {selectedLanguage === 'All' ? 'Global' : selectedLanguage}
@@ -503,7 +534,7 @@ export default function App() {
                     <div className="p-6 flex flex-col h-full justify-between relative z-10">
                       <div className="space-y-3">
                         <div className="flex items-start justify-between">
-                          <Badge variant="secondary" className="text-[9px] uppercase font-black tracking-widest h-5 px-2 bg-white/5 text-white/70 border-white/5">
+                          <Badge variant="secondary" className="text-[9px] uppercase font-black tracking-widest h-5 px-2 bg-muted text-muted-foreground border-border">
                             {tab.type}
                           </Badge>
                           <div className="flex gap-1">
@@ -521,17 +552,17 @@ export default function App() {
                           </div>
                         </div>
                         <div>
-                          <h3 className="font-bold text-xl leading-tight tracking-tight text-white group-hover:text-primary transition-colors line-clamp-2">{tab.title}</h3>
+                          <h3 className="font-bold text-xl leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors line-clamp-2">{tab.title}</h3>
                           <p className="text-sm text-slate-400 font-medium mt-1 opacity-80">{tab.artist}</p>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between pt-5 border-t border-white/5">
                         <div className="flex gap-2">
-                           <Badge variant="outline" className={`text-[9px] px-2 py-0 border-white/10 bg-white/5 ${tab.language === 'Chinese' ? 'text-blue-400' : 'text-emerald-400'}`}>
+                           <Badge variant="outline" className={`text-[9px] px-2 py-0 border-border bg-muted ${tab.language === 'Chinese' ? 'text-blue-500' : 'text-emerald-500'}`}>
                              {tab.language === 'Chinese' ? '🇨🇳 CN' : '🇺🇸 EN'}
                            </Badge>
-                           <Badge variant="outline" className="text-[9px] uppercase px-2 py-0 border-white/10 bg-white/5 text-slate-400">
+                           <Badge variant="outline" className="text-[9px] uppercase px-2 py-0 border-border bg-muted text-muted-foreground">
                              {tab.style}
                            </Badge>
                         </div>
@@ -622,16 +653,16 @@ function SidebarContent({
              Genres
           </h4>
           <div className="space-y-1 text-sm">
-            <button onClick={() => { setSelectedStyle('Pop'); setShowOnlyFavorites(false); }} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${selectedStyle === 'Pop' ? 'bg-blue-500/10 text-blue-400' : 'text-slate-400 hover:bg-white/5'}`}>
+            <button onClick={() => { setSelectedStyle('Pop'); setShowOnlyFavorites(false); }} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${selectedStyle === 'Pop' ? 'bg-blue-500/10 text-blue-500' : 'text-muted-foreground hover:bg-muted'}`}>
               <span className="w-2 h-2 rounded-full bg-blue-500" /> Pop
             </button>
-            <button onClick={() => { setSelectedStyle('Rock'); setShowOnlyFavorites(false); }} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${selectedStyle === 'Rock' ? 'bg-red-500/10 text-red-400' : 'text-slate-400 hover:bg-white/5'}`}>
+            <button onClick={() => { setSelectedStyle('Rock'); setShowOnlyFavorites(false); }} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${selectedStyle === 'Rock' ? 'bg-red-500/10 text-red-500' : 'text-muted-foreground hover:bg-muted'}`}>
               <span className="w-2 h-2 rounded-full bg-red-500" /> Rock
             </button>
-            <button onClick={() => { setSelectedStyle('Reggae'); setShowOnlyFavorites(false); }} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${selectedStyle === 'Reggae' ? 'bg-green-500/10 text-green-400' : 'text-slate-400 hover:bg-white/5'}`}>
+            <button onClick={() => { setSelectedStyle('Reggae'); setShowOnlyFavorites(false); }} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${selectedStyle === 'Reggae' ? 'bg-green-500/10 text-green-500' : 'text-muted-foreground hover:bg-muted'}`}>
               <span className="w-2 h-2 rounded-full bg-green-500" /> Reggae
             </button>
-            <button onClick={() => { setSelectedStyle('Classic'); setShowOnlyFavorites(false); }} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${selectedStyle === 'Classic' ? 'bg-amber-500/10 text-amber-400' : 'text-slate-400 hover:bg-white/5'}`}>
+            <button onClick={() => { setSelectedStyle('Classic'); setShowOnlyFavorites(false); }} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${selectedStyle === 'Classic' ? 'bg-amber-500/10 text-amber-500' : 'text-muted-foreground hover:bg-muted'}`}>
               <span className="w-2 h-2 rounded-full bg-amber-500" /> Classic
             </button>
           </div>

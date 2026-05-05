@@ -31,6 +31,28 @@
     --radius: 0.75rem;
   }
 
+  .light {
+    --background: #ffffff;
+    --foreground: #0f172a; /* slate-900 */
+    --card: #f8fafc; /* slate-50 */
+    --card-foreground: #1e293b; /* slate-800 */
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    --primary: #ea580c; /* orange-600 */
+    --primary-foreground: #ffffff;
+    --secondary: #e2e8f0; /* slate-200 */
+    --secondary-foreground: #0f172a;
+    --muted: #f1f5f9; /* slate-100 */
+    --muted-foreground: #64748b; /* slate-500 */
+    --accent: #ea580c;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --border: #e2e8f0; /* slate-200 */
+    --input: #f8fafc;
+    --ring: #ea580c;
+  }
+
   * {
     @apply border-border;
   }
