@@ -83,35 +83,18 @@ Cloudflare 会自动构建并部署。
 
 ## 示例
 
-添加一首中文摇滚歌曲：
-
-```typescript
-{
-  id: 'cn-5',
-  title: '海阔天空',
-  artist: 'Beyond',
-  language: 'Chinese',
-  style: 'Rock',
-  type: 'Guitar',
-  scoreType: 'PDF',
-  pdfUrl: '/pdfs/CN/海阔天空.pdf',
-  createdAt: new Date().toISOString(),
-  userId: 'default'
-}
-```
-
-添加一首英文流行歌曲：
+添加一首牙买加雷鬼歌曲：
 
 ```typescript
 {
   id: 'en-9',
-  title: 'Perfect',
-  artist: 'Ed Sheeran',
+  title: 'One Love',
+  artist: 'Bob Marley',
   language: 'English',
-  style: 'Pop',
+  style: 'Reggae',
   type: 'Guitar',
   scoreType: 'PDF',
-  pdfUrl: '/pdfs/EN/Perfect.pdf',
+  pdfUrl: '/pdfs/EN/Bob Marley - One Love.pdf',
   createdAt: new Date().toISOString(),
   userId: 'default'
 }
